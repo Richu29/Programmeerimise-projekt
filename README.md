@@ -1,7 +1,6 @@
-# Programmeerimise projekti kirjeldus
 # Projekti kommentaar
 ## Koostöö
-Koostöö on seni sujunud hästi. Kirjutame koodi koos, kuid vastutusalad on jagatud nii, et üks meist tegeleb põhiloogika ja andmetöötlusega, teine kasutajaliidese, testimise ja dokumentatsiooniga. Planeerime ja otsustame kõike koos ning mõlemad oskame ka koodi selgitada. Suhtleme discordis ja vaatame edenemist üle kord nädalas.
+Koostöö on seni sujunud hästi. Kirjutame koodi koosviibides, kuid vastutusalad on jagatud nii, et üks meist tegeleb põhiloogika ja andmetöötlusega, teine kasutajaliidese, testimise ja dokumentatsiooniga. Planeerime ja otsustame kõike koos ning mõlemad oskame ka koodi selgitada. Suhtleme discordis ja vaatame edenemist üle kord nädalas.
 ## Ajakulu
 Projektile on seni kulunud umbes 18 tundi kokku, mis on osa kogumahust ehk umbes 31 tunnist kahe peale.
 ## Edasised plaanid
