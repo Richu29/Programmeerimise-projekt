@@ -1,3 +1,15 @@
+"""Töö: loengutevahelise aja planeerija.
+Tegijad: Ats Põtter ja Richard Anmann.
+
+Käivitamine: ava projekti kaustas terminal ja sisesta python gui.py.
+Tekstiliidese käivitamiseks sisesta python planeerija.py.
+Vaja on Python 3.9 või uuemat koos Tkinteri (Tcl/Tk) toega.
+Hoia gui.py, planeerija.py, andmed.py ja naidis.json samas kaustas.
+Sisestused salvestatakse automaatselt faili kasutaja_andmed.json.
+
+Allikad: aine projekti juhend ja autorite projektiidee.
+"""
+
 import json
 from pathlib import Path
 
@@ -5,11 +17,13 @@ PAEVAD = ("Esmaspäev", "Teisipäev", "Kolmapäev", "Neljapäev", "Reede")
 ANDMEFAIL = Path(__file__).with_name("kasutaja_andmed.json")
 
 def uus_nadal():
+    """Loo igale nädalapäevale eraldi tühjad andmekogud."""
     return {"paev": PAEVAD[0], "paevad": {
         paev: {"loengud": [], "tegevused": [], "vahendid": "",
                "ajad": {}, "mustandid": {}} for paev in PAEVAD}}
 
 def laadi(fail=ANDMEFAIL):
+    """Loe salvestatud nädal ja kontrolli andmete struktuuri."""
     if not fail.exists():
         return uus_nadal()
     andmed = json.loads(fail.read_text(encoding="utf-8"))
@@ -41,6 +55,7 @@ def laadi(fail=ANDMEFAIL):
     return andmed
 
 def salvesta(andmed, fail=ANDMEFAIL):
+    """Kirjuta andmed ajutisse faili ja asenda seejärel senine salvestus."""
     ajutine = fail.with_suffix(".tmp")
     ajutine.write_text(json.dumps(andmed, ensure_ascii=False, indent=2), encoding="utf-8")
     ajutine.replace(fail)

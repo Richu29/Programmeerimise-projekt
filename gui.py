@@ -1,3 +1,15 @@
+"""Töö: loengutevahelise aja planeerija.
+Tegijad: Ats Põtter ja Richard Anmann.
+
+Käivitamine: ava projekti kaustas terminal ja sisesta python gui.py.
+Tekstiliidese käivitamiseks sisesta python planeerija.py.
+Vaja on Python 3.9 või uuemat koos Tkinteri (Tcl/Tk) toega.
+Hoia gui.py, planeerija.py, andmed.py ja naidis.json samas kaustas.
+Sisestused salvestatakse automaatselt faili kasutaja_andmed.json.
+
+Allikad: aine projekti juhend ja autorite projektiidee.
+"""
+
 import io
 import json
 import sys
@@ -14,6 +26,7 @@ from planeerija import (kellaajaks, kuva_soovitused, leia_soovitused,
 
 class Planeerija:
     def __init__(self, aken):
+        """Laadi nädala andmed ning loo akna väljad, tabelid ja nupud."""
         self.aken = aken
         self.nadal = laadi()
         self.paev = self.nadal["paev"]
@@ -32,6 +45,7 @@ class Planeerija:
         raam.pack(fill="both", expand=True)
 
         raam.columnconfigure(0, weight=1)
+        # Kahaneb ainult sisuosa, et arvutamise nupp jääks nähtavaks.
         raam.rowconfigure(3, weight=1)
         ttk.Label(raam, text="Loenguvahede planeerija",
                   font=("Segoe UI", 14, "bold")).grid(row=0, column=0, sticky="w")
@@ -97,11 +111,14 @@ class Planeerija:
         aken.protocol("WM_DELETE_WINDOW", self.sulge)
 
     def aja_muutuja(self, tekst=""):
+        """Seo liikumisaja tekstivälja muutmine automaatse salvestamisega."""
         muutuja = tk.StringVar(self.aken, value=tekst)
         muutuja.trace_add("write", self.autosalvesta)
         return muutuja
 
     def autosalvesta(self, *args):
+        """Salvesta praegune päev ja näita kasutajale salvestamise tulemust."""
+        # Väljade taastamine ei tohi pooleldi laaditud andmeid kettale kirjutada.
         if self.laadimine:
             return True
         rida = self.nadal["paevad"][self.paev]
@@ -118,6 +135,7 @@ class Planeerija:
             return False
 
     def ava_paev(self):
+        """Täida akna väljad valitud päeva salvestatud andmetega."""
         self.laadimine = True
         rida = self.nadal["paevad"][self.paev]
         self.loengud = rida["loengud"]
@@ -129,16 +147,19 @@ class Planeerija:
         self.autosalvesta()
 
     def vaheta_paev(self, event=None):
+        """Salvesta senine päev ning ava rippmenüüst valitud päev."""
         self.autosalvesta()
         self.paev = self.paevavalik.get()
         self.ava_paev()
 
     def sulge(self):
+        """Salvesta enne sulgemist; vea korral küsi kasutajalt kinnitust."""
         if self.autosalvesta() or messagebox.askyesno(
                 "Salvestamine ebaõnnestus", "Kas sulgeda ilma viimaseid muudatusi salvestamata?", parent=self.aken):
             self.aken.destroy()
 
     def uuenda(self):
+        """Värskenda tabeleid ja asukohapaare ning tühjenda vanad soovitused."""
         for liik, tabel in self.tabelid.items():
             tabel.delete(*tabel.get_children())
             for indeks, rida in enumerate(getattr(self, liik)):
@@ -164,6 +185,7 @@ class Planeerija:
         self.autosalvesta()
 
     def lisa(self, liik):
+        """Ava lisamisvorm ja kontrolli sisestatud loengu või tegevuse andmeid."""
         dialoog = tk.Toplevel(self.aken)
         dialoog.title("Lisa loeng" if liik == "loengud" else "Lisa tegevus")
         dialoog.transient(self.aken)
@@ -177,6 +199,7 @@ class Planeerija:
         muutujad = [tk.StringVar(dialoog, value=v) for v in mustandid.get(liik, [""] * 4)]
 
         def salvesta_mustand(*args):
+            """Säilita ka lõpetamata vorm, et seda hiljem jätkata."""
             mustandid[liik] = [v.get() for v in muutujad]
             self.autosalvesta()
 
@@ -188,6 +211,7 @@ class Planeerija:
             sisendid.append(sisend)
 
         def salvesta():
+            """Kontrolli vormi, lisa kirje ning eemalda lõpetatud mustand."""
             try:
                 tekstid = [s.get().strip() for s in sisendid]
                 kohustuslikud = tekstid if liik == "loengud" else tekstid[:3]
@@ -226,12 +250,14 @@ class Planeerija:
         sisendid[0].focus_set()
 
     def kustuta(self, liik):
+        """Eemalda valitud rida aktiivse päeva andmetest."""
         valik = self.tabelid[liik].selection()
         if valik:
             getattr(self, liik).pop(int(valik[0]))
             self.uuenda()
 
     def laadi_naidis(self):
+        """Asenda ainult valitud päeva andmed kaasasoleva näitega."""
         if (self.loengud or self.tegevused or self.vahendid.get().strip()) and not messagebox.askyesno(
                 "Laadi näidis", "Kas asendada valitud päeva andmed näidisandmetega?", parent=self.aken):
             return
@@ -251,6 +277,7 @@ class Planeerija:
         self.uuenda()
 
     def arvuta(self):
+        """Kontrolli liikumisaegu ning kuva valitud päeva soovitused."""
         try:
             if len(self.loengud) < 2:
                 raise ValueError("Lisa vähemalt kaks loengut.")
@@ -280,6 +307,8 @@ class Planeerija:
             messagebox.showerror("Kontrolli andmeid", str(viga), parent=self.aken)
 
 def main():
+    """Käivita graafiline rakendus."""
+    # DPI tugi tuleb määrata enne akna loomist, et tekst jääks teravaks.
     if sys.platform == "win32":
         import ctypes
 

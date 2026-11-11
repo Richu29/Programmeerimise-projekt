@@ -1,7 +1,20 @@
+"""Töö: loengutevahelise aja planeerija.
+Tegijad: Ats Põtter ja Richard Anmann.
+
+Käivitamine: ava projekti kaustas terminal ja sisesta python gui.py.
+Tekstiliidese käivitamiseks sisesta python planeerija.py.
+Vaja on Python 3.9 või uuemat koos Tkinteri (Tcl/Tk) toega.
+Hoia gui.py, planeerija.py, andmed.py ja naidis.json samas kaustas.
+Sisestused salvestatakse automaatselt faili kasutaja_andmed.json.
+
+Allikad: aine projekti juhend ja autorite projektiidee.
+"""
+
 import json
 from pathlib import Path
 
 def minutiteks(kellaaeg):
+    """Teisenda HH:MM kujul kellaaeg minutiteks päeva algusest."""
     osad = kellaaeg.strip().split(":")
     if len(osad) != 2:
         raise ValueError("Kasuta kuju HH:MM, näiteks 09:15.")
@@ -11,9 +24,11 @@ def minutiteks(kellaaeg):
     return tunnid * 60 + minutid
 
 def kellaajaks(minutid):
+    """Vorminda minutites antud kellaaeg kujule HH:MM."""
     return f"{minutid // 60:02d}:{minutid % 60:02d}"
 
 def kusi_tekst(kusimus):
+    """Küsi mittetühi tekst ja korda küsimust tühja vastuse korral."""
     while True:
         vastus = input(kusimus).strip()
         if vastus:
@@ -21,6 +36,7 @@ def kusi_tekst(kusimus):
         print("Sisesta vähemalt üks märk.")
 
 def kusi_arv(kusimus, miinimum=0):
+    """Küsi täisarv, mis on vähemalt etteantud miinimum."""
     while True:
         try:
             arv = int(input(kusimus))
@@ -31,6 +47,7 @@ def kusi_arv(kusimus, miinimum=0):
         print(f"Sisesta täisarv, mis on vähemalt {miinimum}.")
 
 def kusi_kellaaeg(kusimus):
+    """Küsi kellaaeg, kuni kasutaja sisestab sobiva väärtuse."""
     while True:
         try:
             return minutiteks(input(kusimus))
@@ -38,9 +55,11 @@ def kusi_kellaaeg(kusimus):
             print(viga)
 
 def vahendite_hulk(tekst):
+    """Eralda komadega loetletud vahendid ning ühtlusta kirjapilt."""
     return {osa.strip().casefold() for osa in tekst.split(",") if osa.strip()}
 
 def kusi_andmed():
+    """Kogu tekstiliideses ühe päeva loengud, tegevused ja liikumisajad."""
     loengud = []
     print("\nSisesta ühe päeva loengud. Kasuta asukohtade puhul samu nimesid.")
     for number in range(kusi_arv("Loengute arv (vähemalt 2): ", 2)):
@@ -79,14 +98,17 @@ def kusi_andmed():
     return loengud, tegevused, olemas, liikumisajad
 
 def liikumisaeg(lahtekoht, sihtkoht, liikumisajad):
+    """Leia kahe asukoha vaheline aeg; samas kohas on see null."""
     if lahtekoht == sihtkoht:
         return 0
     voti = "|".join(sorted([lahtekoht, sihtkoht]))
     return liikumisajad[voti]
 
 def leia_soovitused(loengud, tegevused, olemas, liikumisajad):
+    """Leia igasse loenguvahesse sobivad tegevused eraldi alternatiividena."""
     jarjestatud = sorted(loengud, key=lambda loeng: loeng["algus"])
     tulemused = []
+    # Kõrvutiste loengute lõpu ja alguse vahele jääb võimalik vaba aeg.
     for eelmine, jargmine in zip(jarjestatud, jarjestatud[1:]):
         algus, lopp = eelmine["lopp"], jargmine["algus"]
         if lopp <= algus:
@@ -97,6 +119,7 @@ def leia_soovitused(loengud, tegevused, olemas, liikumisajad):
                 continue
             minek = liikumisaeg(eelmine["asukoht"], tegevus["asukoht"], liikumisajad)
             tagasitee = liikumisaeg(tegevus["asukoht"], jargmine["asukoht"], liikumisajad)
+            # Arvesse läheb ka teekond tegevuseni ja sealt järgmisse loengusse.
             vajalik_aeg = minek + tegevus["kestus"] + tagasitee
             if vajalik_aeg <= lopp - algus:
                 sobivad.append({"tegevus": tegevus, "algus": algus + minek,
@@ -108,6 +131,7 @@ def leia_soovitused(loengud, tegevused, olemas, liikumisajad):
     return tulemused
 
 def kuva_soovitused(tulemused):
+    """Väljasta tegevuste ajad, liikumisajad ja alles jääv vaba aeg."""
     print("\n--- SOOVITUSED ---")
     print("Iga loetletud tegevus on eraldi valik, mitte ühine päevaplaan.")
     if not tulemused:
@@ -127,6 +151,7 @@ def kuva_soovitused(tulemused):
                   f"vaba aega jääb {soovitus['varu']} min.")
 
 def main():
+    """Käivita tekstiliides oma andmete või näidisandmetega."""
     print("LOENGUTEVAHELISE AJA PLANEERIJA")
     print("1 – sisesta oma andmed\n2 – vaata näidet")
     while True:
