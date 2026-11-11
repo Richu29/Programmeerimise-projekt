@@ -1,0 +1,44 @@
+{
+  "paev": "Esmaspäev",
+  "paevad": {
+    "Esmaspäev": {
+      "loengud": [],
+      "tegevused": [],
+      "vahendid": "arvuti",
+      "ajad": {
+        "delta|kohvik": "5",
+        "delta|peahoone": "15",
+        "kohvik|peahoone": "10"
+      },
+      "mustandid": {}
+    },
+    "Teisipäev": {
+      "loengud": [],
+      "tegevused": [],
+      "vahendid": "",
+      "ajad": {},
+      "mustandid": {}
+    },
+    "Kolmapäev": {
+      "loengud": [],
+      "tegevused": [],
+      "vahendid": "",
+      "ajad": {},
+      "mustandid": {}
+    },
+    "Neljapäev": {
+      "loengud": [],
+      "tegevused": [],
+      "vahendid": "",
+      "ajad": {},
+      "mustandid": {}
+    },
+    "Reede": {
+      "loengud": [],
+      "tegevused": [],
+      "vahendid": "",
+      "ajad": {},
+      "mustandid": {}
+    }
+  }
+}

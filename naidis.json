@@ -1,0 +1,14 @@
+{
+  "loengud": [
+    {"nimi": "Programmeerimine", "algus": 540, "lopp": 630, "asukoht": "delta"},
+    {"nimi": "Matemaatika", "algus": 720, "lopp": 810, "asukoht": "peahoone"},
+    {"nimi": "Seminar", "algus": 840, "lopp": 930, "asukoht": "delta"}
+  ],
+  "tegevused": [
+    {"nimi": "Kodutöö", "kestus": 45, "asukoht": "delta", "vahendid": ["arvuti"]},
+    {"nimi": "Lõunasöök", "kestus": 25, "asukoht": "kohvik", "vahendid": []},
+    {"nimi": "Lugemine", "kestus": 15, "asukoht": "peahoone", "vahendid": ["raamat"]}
+  ],
+  "olemas": ["arvuti"],
+  "liikumisajad": {"delta|kohvik": 5, "delta|peahoone": 15, "kohvik|peahoone": 10}
+}
