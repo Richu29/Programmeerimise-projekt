@@ -4,11 +4,11 @@
     "Esmaspäev": {
       "loengud": [],
       "tegevused": [],
-      "vahendid": "arvuti",
+      "vahendid": "",
       "ajad": {
-        "delta|kohvik": "5",
-        "delta|peahoone": "15",
-        "kohvik|peahoone": "10"
+        "delta|kohvik": "",
+        "delta|peahoone": "",
+        "kohvik|peahoone": ""
       },
       "mustandid": {}
     },
